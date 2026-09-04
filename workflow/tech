@@ -1,0 +1,19 @@
+| Part              | Tech                                |
+| ----------------- | ----------------------------------- |
+| Frontend          | Next.js, Node.js, HTML, CSS, JS     |
+| Styling           | Figma                               |
+| Backend           | Python + Node.js                    |
+| Database          | PostgreSQL/MySQL                    |
+| DB platform       | Supabase                            |
+| File storage      | Supabase Storage private bucket     |
+| ML                | Python                              |
+| OCR               | Tesseract / EasyOCR / API           |
+| AI summarization  | External AI API / model ringan      |
+| Frontend hosting  | Vercel                              |
+| Backend hosting   | Render                              |
+| Git               | GitHub                              |
+| API format        | REST + JSON                         |
+| Protocol          | HTTPS, SSL/TLS                      |
+| Container         | Docker                              |
+| Testing           | Pytest + frontend testing           |
+| API documentation | OpenAPI/Swagger dari FastAPI        |
