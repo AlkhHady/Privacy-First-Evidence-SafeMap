@@ -1,0 +1,26 @@
+users
+ ├── id (primary key)  INTEGER
+ ├── password          VARCHAR
+ └── created_at        DATE/TIME
+
+cases
+ ├── id (primary key)        INTEGER
+ ├── user_id (foreign key)   INTEGER
+ ├── title                   VARCHAR
+ ├── description             VARCHAR
+ └── created_at              DATE/TIME
+
+evidence
+ ├── id (primary key)        INTEGER
+ ├── case_id (foreign key)   INTEGER
+ ├── storage_path            VARCHAR
+ ├── file_type               VARCHAR
+ ├── file_hash               VARCHAR
+ └── uploaded_at
+
+analysis
+ ├── id (primary key)            INTEGER
+ ├── evidence_id (foreign key)   INTEGER
+ ├── extracted_text              VARCHAR
+ ├── summary                     VARCHAR
+ └── confidence                  VARCHAR
