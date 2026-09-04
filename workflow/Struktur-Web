@@ -1,0 +1,24 @@
+/api/v1
+
+/auth
+    POST /register
+    POST /login
+    POST /logout
+
+/cases
+    GET /
+    POST /
+    GET /{id}
+    DELETE /{id}
+
+/evidence
+    POST /upload
+    GET /{id}
+    DELETE /{id}
+
+/analysis
+    POST /{evidence_id}
+    GET /{evidence_id}
+
+/safe-map
+    GET /
