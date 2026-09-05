@@ -1,11 +1,12 @@
-Teknologi yang dipakai selama pembuatan projek
+# Teknologi MVP
 
 | Part              | Tech                                |
 | ----------------- | ----------------------------------- |
-| Frontend          | Next.js, Node.js, HTML, CSS, JS     |
-| Styling           | Figma                               |
-| Backend           | Python + Node.js                    |
-| Database          | PostgreSQL/MySQL                    |
+| UI/UX             | Figma                               |
+| Frontend          | Next.js + TypeScript                |
+| Styling           | CSS                                 |
+| Backend/API       | Python + FastAPI                    |
+| Database          | PostgreSQL                          |
 | DB platform       | Supabase                            |
 | File storage      | Supabase Storage private bucket     |
 | ML                | Python                              |
@@ -16,6 +17,7 @@ Teknologi yang dipakai selama pembuatan projek
 | Git               | GitHub                              |
 | API format        | REST + JSON                         |
 | Protocol          | HTTPS, SSL/TLS                      |
-| Container         | Docker                              |
-| Testing           | Pytest + frontend testing           |
+| Testing           | Pytest + frontend lint              |
 | API documentation | OpenAPI/Swagger dari FastAPI        |
+
+Gunakan satu backend dan satu database agar integrasi MVP tetap realistis.

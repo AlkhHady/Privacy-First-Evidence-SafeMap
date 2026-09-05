@@ -1,24 +1,19 @@
-/api/v1
+# Kontrak API MVP
 
-/auth
-    POST /register
-    POST /login
-    POST /logout
+Base path: `/api/v1`. Endpoint selain `/health` menerima `Authorization: Bearer <Supabase access token>`.
 
-/cases
-    GET /
-    POST /
-    GET /{id}
-    DELETE /{id}
+| Method | Endpoint | Fungsi | Status MVP |
+| --- | --- | --- | --- |
+| GET | `/health` | Health check Render | tersedia |
+| GET | `/cases` | Daftar kasus milik user | tersedia |
+| POST | `/cases` | Membuat kasus | tersedia |
+| GET | `/cases/{id}` | Detail kasus | lanjutan |
+| DELETE | `/cases/{id}` | Hapus kasus dan bukti terkait | lanjutan |
+| POST | `/cases/{id}/evidence` | Upload bukti | lanjutan |
+| GET | `/evidence/{id}` | Metadata/status bukti | lanjutan |
+| DELETE | `/evidence/{id}` | Hapus bukti | lanjutan |
+| POST | `/evidence/{id}/analysis` | Mulai proses ML | lanjutan |
+| GET | `/evidence/{id}/analysis` | Ambil hasil ML | lanjutan |
+| GET | `/safe-locations` | Daftar lokasi bantuan/aman | lanjutan |
 
-/evidence
-    POST /upload
-    GET /{id}
-    DELETE /{id}
-
-/analysis
-    POST /{evidence_id}
-    GET /{evidence_id}
-
-/safe-map
-    GET /
+Register, login, logout, dan forgot password dilakukan melalui Supabase Auth di frontend, bukan endpoint backend buatan sendiri.
