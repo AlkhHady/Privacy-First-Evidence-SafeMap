@@ -1,3 +1,3 @@
 # Frontend
 
-Berisi halaman HTML, CSS, JavaScript, dan aset yang akan di-deploy ke Vercel.
+Halaman HTML, satu file CSS, dan JavaScript untuk Auth, Evidence, Laporan, serta SafeMap.

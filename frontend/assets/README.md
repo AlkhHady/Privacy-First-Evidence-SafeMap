@@ -1,3 +1,3 @@
 # Assets
 
-Tempat aset frontend seperti gambar dan ikon.
+Tempat gambar dan ikon frontend.

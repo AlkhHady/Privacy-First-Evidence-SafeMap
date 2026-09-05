@@ -1,3 +1,3 @@
-# Privacy-First Evidence & SafeMap
+# Ruang Aman
 
-Framework awal project mahasiswa. File implementasi sengaja dikosongkan agar diisi oleh masing-masing divisi.
+MVP pengolahan bukti dan SafeMap. Frontend di Vercel, backend di Render, serta database dan private Storage di Supabase.

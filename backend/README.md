@@ -1,3 +1,3 @@
 # Backend
 
-Backend FastAPI yang di-deploy ke Render. `main.py` menjalankan API; file lain menangani konfigurasi, database, dan autentikasi.
+`main.py` berisi API utama; `database.py` menghubungkan Supabase; `auth.py` memeriksa token pengguna.
