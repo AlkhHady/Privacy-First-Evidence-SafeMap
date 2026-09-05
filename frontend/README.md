@@ -1,12 +1,3 @@
-# Frontend Ruang Aman
+# Frontend
 
-Next.js App Router dengan TypeScript. Halaman awal dan koneksi Supabase tersedia sebagai fondasi.
-
-Salin `.env.example` dari root menjadi `.env.local`, lalu jalankan:
-
-```bash
-npm install
-npm run dev
-```
-
-Halaman MVP berikutnya: `/register`, `/login`, `/forgot-password`, `/evidence`, `/results`, dan `/safe-map`.
+Berisi halaman HTML, CSS, JavaScript, dan aset yang akan di-deploy ke Vercel.
