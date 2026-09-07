@@ -1,15 +1,11 @@
 begin;
 
--- PROFILES
--- Data tambahan user. Email/password tetap di auth.users.
-
 create table public.profiles (
     id uuid primary key references auth.users(id) on delete cascade,
     display_name varchar(100),
     created_at timestamptz not null default now()
 );
 
--- Otomatis membuat profile ketika user registrasi
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -30,9 +26,6 @@ $$;
 create trigger on_auth_user_created
 after insert on auth.users
 for each row execute procedure public.handle_new_user();
-
--- CASES
--- Satu row = satu kasus/kumpulan bukti.
 
 create table public.cases (
     id uuid primary key default gen_random_uuid(),
@@ -66,9 +59,6 @@ create table public.cases (
 
 create index cases_user_id_index
 on public.cases(user_id);
-
--- EVIDENCE
--- Menyimpan metadata. File asli masuk Supabase Storage.
 
 create table public.evidence (
     id uuid primary key default gen_random_uuid(),
@@ -125,9 +115,6 @@ create index evidence_expires_at_index
 on public.evidence(expires_at)
 where deleted_at is null;
 
--- ANALYSIS RESULTS
--- Hasil akhir pengolahan seluruh bukti dalam satu kasus.
-
 create table public.analysis_results (
     id uuid primary key default gen_random_uuid(),
 
@@ -156,9 +143,6 @@ create table public.analysis_results (
 
 create index analysis_results_case_id_index
 on public.analysis_results(case_id);
-
--- SUPPORT SERVICES
--- Digunakan oleh SafeMap dan halaman contact.
 
 create table public.support_services (
     id uuid primary key default gen_random_uuid(),
@@ -220,8 +204,6 @@ on public.support_services(category);
 create index support_services_active_index
 on public.support_services(is_active);
 
--- UPDATED_AT OTOMATIS
-
 create or replace function public.update_updated_at()
 returns trigger
 language plpgsql
@@ -245,15 +227,11 @@ create trigger support_services_update_timestamp
 before update on public.support_services
 for each row execute procedure public.update_updated_at();
 
--- AKTIFKAN ROW LEVEL SECURITY
-
 alter table public.profiles enable row level security;
 alter table public.cases enable row level security;
 alter table public.evidence enable row level security;
 alter table public.analysis_results enable row level security;
 alter table public.support_services enable row level security;
-
--- RLS PROFILES
 
 create policy "user dapat melihat profil sendiri"
 on public.profiles
@@ -267,8 +245,6 @@ for update
 to authenticated
 using ((select auth.uid()) = id)
 with check ((select auth.uid()) = id);
-
--- RLS CASES
 
 create policy "user dapat membuat kasus sendiri"
 on public.cases
@@ -294,9 +270,6 @@ on public.cases
 for delete
 to authenticated
 using ((select auth.uid()) = user_id);
-
--- RLS EVIDENCE
--- User hanya dapat mengakses evidence dari kasus miliknya.
 
 create policy "user dapat menambah evidence sendiri"
 on public.evidence
@@ -350,8 +323,6 @@ using (
     )
 );
 
--- RLS ANALYSIS RESULTS
-
 create policy "user dapat melihat hasil kasus sendiri"
 on public.analysis_results
 for select
@@ -365,19 +336,11 @@ using (
     )
 );
 
--- Insert/update hasil dilakukan backend menggunakan service role.
-
--- RLS SUPPORT SERVICES
--- Bisa dibaca landing page tanpa login.
-
 create policy "semua orang dapat melihat layanan aktif"
 on public.support_services
 for select
 to anon, authenticated
 using (is_active = true);
-
--- PRIVATE STORAGE BUCKET
--- 25 MB per file.
 
 insert into storage.buckets (
     id,
@@ -408,9 +371,6 @@ on conflict (id) do update set
     public = excluded.public,
     file_size_limit = excluded.file_size_limit,
     allowed_mime_types = excluded.allowed_mime_types;
-
--- STORAGE POLICIES
--- Path wajib: user_id/case_id/nama-file
 
 create policy "user dapat upload ke folder sendiri"
 on storage.objects
