@@ -1,3 +1,6 @@
 # Ruang Aman
 
-MVP pengolahan bukti dan SafeMap. Frontend di Vercel, backend di Render, serta database dan private Storage di Supabase.
+Platform evidence and safemap<br>
+frontend deploy : vercel<br>
+backend deploy : render<br>
+database & storage : supabase<br>
