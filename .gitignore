@@ -1,22 +1,22 @@
-# Dependencies and build output
+# dependency
 node_modules/
 .next/
 dist/
 build/
 
-# Python
+# env python nya
 __pycache__/
 *.py[cod]
 .venv/
 .pytest_cache/
 
-# Local environment and credentials
+# local env and cred
 .env
 .env.local
 .env.*.local
 !.env.example
 
-# Editors and operating systems
+# text editor dan os yg dipakai
 .vscode/
 .idea/
 .DS_Store
