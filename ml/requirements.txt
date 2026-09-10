@@ -1,0 +1,7 @@
+easyocr
+Pillow
+faster-whisper
+av
+fastapi
+uvicorn
+python-multipart
