@@ -1,1 +1,255 @@
+@import url("./evidence.css");
 
+.safemap-container {
+  width: min(1200px, calc(100% - 34px));
+  margin: 42px auto 70px;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.7fr);
+  gap: 18px;
+}
+
+.map-section,
+.services-section,
+.report-incident {
+  background: var(--surface);
+  border: 1px solid rgba(152, 75, 78, 0.17);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.map-section {
+  overflow: hidden;
+}
+
+.map-heading {
+  padding: 25px 26px 19px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.map-heading h1 {
+  margin: 0;
+  color: var(--primary);
+  font-family: "Playfair Display", serif;
+  font-size: 37px;
+}
+
+.map-heading p:not(.eyebrow) {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.map-heading button {
+  padding: 10px 14px;
+  border: 1px solid var(--primary);
+  border-radius: 7px;
+  background: white;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.map-heading button:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.map-wrapper {
+  border-top: 1px solid rgba(152, 75, 78, 0.13);
+}
+
+.map-controls {
+  padding: 14px;
+  background: var(--surface-soft);
+  display: grid;
+  gap: 10px;
+}
+
+.map-controls input {
+  background: white;
+}
+
+.category-buttons {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+}
+
+.category-buttons button {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: white;
+  color: var(--primary);
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.category-buttons button.active {
+  background: var(--primary);
+  color: white;
+}
+
+#map {
+  width: 100%;
+  height: 570px;
+  background: var(--surface-soft);
+}
+
+.services-section {
+  height: 724px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.services-heading {
+  padding: 24px 20px 15px;
+  border-bottom: 1px solid rgba(152, 75, 78, 0.16);
+}
+
+.services-heading h2 {
+  margin: 0;
+  color: var(--primary);
+  font-family: "Playfair Display", serif;
+  font-size: 21px;
+}
+
+.services-heading p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.service-list {
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.service-card {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid transparent;
+  border-bottom-color: #efd0cd;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.service-card:hover,
+.service-card.active {
+  border-color: var(--border);
+  background: var(--surface-soft);
+}
+
+.service-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.service-card h3 {
+  margin: 0;
+  color: var(--primary);
+  font-size: 13px;
+}
+
+.service-category {
+  color: var(--success);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.service-address {
+  margin: 6px 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.service-information {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+}
+
+.service-information a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.empty-services {
+  padding: 40px 15px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.report-incident {
+  grid-column: 1 / -1;
+  padding: 22px;
+  text-align: center;
+}
+
+.report-incident h2 {
+  margin: 0;
+  color: var(--primary);
+  font-family: "Playfair Display", serif;
+}
+
+.report-incident p {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.report-incident a {
+  display: inline-block;
+  width: min(430px, 100%);
+  padding: 11px;
+  border-radius: 7px;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.user-location-marker {
+  width: 18px;
+  height: 18px;
+  border: 4px solid white;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 2px var(--success);
+}
+
+@media (max-width: 900px) {
+  .safemap-container {
+    grid-template-columns: 1fr;
+  }
+
+  .services-section {
+    height: 430px;
+  }
+}
+
+@media (max-width: 600px) {
+  .map-heading {
+    flex-direction: column;
+  }
+
+  #map {
+    height: 470px;
+  }
+}
