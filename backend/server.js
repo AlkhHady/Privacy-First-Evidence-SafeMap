@@ -19,8 +19,16 @@ const upload = multer({
 // Agar backend bisa membaca JSON dari frontend
 app.use(express.json());
 
-// Endpoint untuk mengecek apakah server hidup
+// vercel endpoint
 app.get("/", (req, res) => {
+  res.json({
+    status: "ok",
+    message: "Ruang Aman Backend API"
+  });
+});
+
+// Endpoint untuk mengecek apakah server hidup
+app.get("/health", (req, res) => {
   res.json({
     status: "ok",
     message: "Ruang Aman Backend is running"
