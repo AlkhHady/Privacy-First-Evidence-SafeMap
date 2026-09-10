@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Proses Bukti | Ruang Aman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/evidence.css">
+</head>
+<body>
+  <button class="menu-button" id="menu-button" aria-label="Buka menu">☰</button><div class="overlay" id="overlay"></div>
+  <aside class="sidebar" id="sidebar"><a class="brand" href="index.html">Ruang Aman</a><p class="tagline">Bukti aman, bantuan lebih dekat.</p>
+    <nav><a href="index.html">⌂ <span>Beranda</span></a><a class="active" href="evidence.html">＋ <span>Proses Bukti</span></a><a href="reports.html">▤ <span>Laporan</span></a><a href="safemap.html">⌖ <span>SafeMap</span></a></nav>
+    <div class="privacy-note"><b>Privasi diutamakan</b><span>File hanya diproses untuk laporanmu.</span></div><a class="logout" href="login.html">Keluar</a>
+  </aside>
+  <main class="main-content"><header class="page-header"><div><p class="eyebrow">Pengumpulan bukti</p><h1>Proses Bukti</h1><p>Unggah satu bukti, lengkapi konteks, lalu kirim untuk diproses.</p></div><span class="secure-badge">● Data terlindungi</span></header>
+    <ol class="steps"><li class="active"><b>1</b><span>Pilih bukti</span></li><li><b>2</b><span>Lengkapi detail</span></li><li><b>3</b><span>Kirim & olah</span></li></ol>
+    <form id="evidence-form" class="evidence-form">
+      <section class="card"><div class="section-heading"><div><span class="step-label">LANGKAH 1</span><h2>Jenis bukti</h2></div><p>Pilih sesuai file yang akan dikirim.</p></div>
+        <div class="type-grid" role="radiogroup"><button type="button" class="type-card active" data-type="image"><span>▧</span><b>Foto</b><small>JPG, PNG, WEBP</small></button><button type="button" class="type-card" data-type="audio"><span>♫</span><b>Audio</b><small>MP3, WAV, M4A</small></button><button type="button" class="type-card" data-type="video"><span>▶</span><b>Video</b><small>MP4, MOV, WEBM</small></button><button type="button" class="type-card" data-type="text"><span>¶</span><b>Teks</b><small>TXT</small></button></div>
+        <label class="drop-zone" id="drop-zone" for="evidence-file"><input id="evidence-file" name="file" type="file" accept="image/jpeg,image/png,image/webp" required><span class="upload-icon">⇧</span><b>Tarik file ke sini atau pilih dari perangkat</b><small id="file-rule">Foto JPG, PNG, WEBP • maksimal 4 MB</small></label>
+        <div class="file-preview hidden" id="file-preview"><div class="file-icon" id="file-icon">▧</div><div><b id="file-name"></b><small id="file-meta"></small></div><button type="button" id="remove-file" aria-label="Hapus file">×</button></div>
+      </section>
+      <section class="card"><div class="section-heading"><div><span class="step-label">LANGKAH 2</span><h2>Detail kejadian</h2></div><p>Informasi ini membantu membaca bukti secara tepat.</p></div>
+        <div class="form-grid"><label><span>Judul laporan</span><input id="case-title" name="title" maxlength="100" placeholder="Contoh: Pesan ancaman melalui chat" required></label><label><span>Tanggal kejadian</span><input id="incident-date" name="incident_date" type="datetime-local" required></label><label class="wide"><span>Lokasi kejadian <small>(opsional)</small></span><input id="incident-location" name="location" maxlength="150" placeholder="Kota atau lokasi kejadian"></label><label class="wide"><span>Kronologi singkat</span><textarea id="chronology" name="chronology" rows="6" maxlength="1500" placeholder="Ceritakan kejadian secara runtut tanpa menambahkan dugaan..." required></textarea><small class="counter"><span id="char-count">0</span>/1500</small></label></div>
+      </section>
+      <div class="form-footer"><p><b>Catatan:</b> hasil sistem adalah ringkasan awal, bukan kesimpulan hukum.</p><button class="primary-button" id="submit-button" type="submit">Kirim untuk diproses →</button></div><div class="alert hidden" id="form-alert" role="alert"></div>
+    </form>
+  </main><script type="module" src="./js/evidence.js"></script>
+</body></html>
