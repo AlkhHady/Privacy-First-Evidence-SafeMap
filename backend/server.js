@@ -4,11 +4,11 @@ const {
   validateFile,
   readEvidenceFile,
   processWithML
-} = require("./process");
+} = require("./routes/process");
 const multer = require("multer");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const upload = multer({
   limits: {
@@ -77,6 +77,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server berjalan di http://localhost:${PORT}`);
 });
