@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daftar – Ruang Aman</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body class="auth-page">
+<div class="auth-container">
+  <div class="auth-side">
+    <div class="auth-side-content">
+      <a href="/" class="auth-brand"><i class="fas fa-shield-alt"></i> Ruang Aman</a>
+      <h2 class="auth-side-title">Mulai langkah amanmu. <span>Kami ada untukmu.</span></h2>
+      <p class="auth-side-desc">Buat akun untuk mengakses layanan pengolahan bukti digital, konseling, dan bantuan hukum dalam satu ruang aman.</p>
+    </div>
+    <div class="auth-leaf auth-leaf-1"><i class="fas fa-leaf"></i></div>
+    <div class="auth-leaf auth-leaf-2"><i class="fas fa-leaf"></i></div>
+    <div class="auth-leaf auth-leaf-3"><i class="fas fa-leaf"></i></div>
+  </div>
+  <div class="auth-form-side">
+    <div class="auth-form-wrapper">
+      <div class="auth-form-header">
+        <h1>Daftar Akun</h1>
+        <p>Sudah punya akun? <a href="/login.html">Masuk di sini</a></p>
+      </div>
+      <form class="auth-form">
+        <div class="form-group">
+          <label for="name">Nama Lengkap</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input type="text" id="name" placeholder="Nama lengkap Anda" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" placeholder="nama@email.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Kata Sandi</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="Minimal 8 karakter" minlength="8" required />
+            <button type="button" class="toggle-password" onclick="togglePassword('password', this)">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Konfirmasi Kata Sandi</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="confirm-password" placeholder="Ulangi kata sandi" required />
+            <button type="button" class="toggle-password" onclick="togglePassword('confirm-password', this)">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div class="form-options">
+          <label class="checkbox-label">
+            <input type="checkbox" required />
+            <span>Saya setuju dengan <a href="#">Syarat & Ketentuan</a></span>
+          </label>
+        </div>
+        <button type="submit" class="btn-auth btn-auth-primary"><i class="fas fa-user-plus"></i> Daftar Sekarang</button>
+      </form>
+      <div class="auth-footer"><a href="/">← Kembali ke Beranda</a></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
