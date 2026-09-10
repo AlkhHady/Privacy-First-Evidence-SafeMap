@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Detail Laporan | Ruang Aman</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="css/reports.css">
+</head>
+
+<body data-page="report-detail">
+  <header class="topbar">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">♡</span>
+
+      <span>
+        <strong>Ruang Aman</strong>
+        <small>Lebih Aman, Lebih Berdaya</small>
+      </span>
+    </a>
+
+    <nav class="navigation">
+      <a href="index.html">Beranda</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="safemap.html">Safe Map</a>
+      <a href="reports.html" class="active">Laporan</a>
+    </nav>
+  </header>
+
+  <main class="detail-container">
+    <div class="detail-navigation">
+      <a href="reports.html">← Kembali</a>
+
+      <button id="print-report" type="button">
+        ⇩ Unduh Laporan
+      </button>
+    </div>
+
+    <header class="detail-heading">
+      <p class="eyebrow">RINGKASAN KASUS</p>
+      <h1>Detail Laporan</h1>
+    </header>
+
+    <section class="detail-summary-grid">
+      <article class="information-card">
+        <h2>Informasi Kasus</h2>
+
+        <dl>
+          <div>
+            <dt>Judul kasus</dt>
+            <dd id="detail-title">-</dd>
+          </div>
+
+          <div>
+            <dt>Tanggal dibuat</dt>
+            <dd id="detail-created-date">-</dd>
+          </div>
+
+          <div>
+            <dt>Status</dt>
+            <dd id="detail-status">-</dd>
+          </div>
+
+          <div>
+            <dt>Jumlah bukti</dt>
+            <dd id="detail-evidence-count">1</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="summary-card">
+        <h2>Ringkasan</h2>
+        <p id="detail-summary">Memuat ringkasan laporan...</p>
+
+        <div class="disclaimer">
+          Ringkasan ini merupakan hasil analisis awal dan bukan kesimpulan
+          hukum atau penentuan kesalahan.
+        </div>
+      </article>
+    </section>
+
+    <section class="detail-content">
+      <div class="detail-tabs" id="detail-tabs">
+        <button class="active" data-tab="chronology" type="button">
+          Kronologi
+        </button>
+
+        <button data-tab="evidence" type="button">
+          Daftar Bukti
+        </button>
+
+        <button data-tab="analysis" type="button">
+          Analisis
+        </button>
+
+        <button data-tab="notes" type="button">
+          Catatan
+        </button>
+      </div>
+
+      <div id="chronology-panel" class="tab-panel">
+        <ol id="timeline-list" class="timeline-list"></ol>
+      </div>
+
+      <div id="evidence-panel" class="tab-panel hidden">
+        <div class="evidence-detail">
+          <span class="evidence-detail-icon">📎</span>
+
+          <span>
+            <strong id="detail-file-name">Tidak ada file</strong>
+            <small>Bukti yang dilampirkan pengguna</small>
+          </span>
+        </div>
+      </div>
+
+      <div id="analysis-panel" class="tab-panel hidden">
+        <h2>Hasil analisis awal</h2>
+
+        <ul class="analysis-list" id="analysis-list">
+          <li>Bukti berhasil diterima oleh sistem.</li>
+          <li>Data menunggu pengolahan OCR atau transkripsi.</li>
+          <li>Hasil tetap memerlukan verifikasi manusia.</li>
+        </ul>
+      </div>
+
+      <div id="notes-panel" class="tab-panel hidden">
+        <h2>Catatan pengguna</h2>
+        <p id="detail-description">Tidak ada catatan.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/reports.js"></script>
+</body>
+</html>
