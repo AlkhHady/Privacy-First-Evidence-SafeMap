@@ -1,211 +1,375 @@
 import { supabase } from "./supabase.js";
 
-function getValue(id) {
+const currentPage = window.location.pathname
+  .split("/")
+  .pop()
+  .toLowerCase();
+
+const form = document.querySelector("form.auth-form");
+
+function getTextValue(id) {
   return document.getElementById(id)?.value.trim() || "";
 }
 
-function showMessage(message, isError = false) {
-  const element = document.getElementById("message");
-
-  if (!element) return;
-
-  element.textContent = message;
-  element.style.color = isError ? "#b42318" : "#067647";
+function getPasswordValue(id) {
+  return document.getElementById(id)?.value || "";
 }
 
-function setLoading(button, loading) {
+function getSubmitButton() {
+  return form?.querySelector("button[type='submit']");
+}
+
+function setLoading(isLoading, loadingText = "Memproses...") {
+  const button = getSubmitButton();
+
   if (!button) return;
 
-  button.disabled = loading;
-  button.textContent = loading
-    ? "Memproses..."
-    : button.dataset.defaultText;
+  if (!button.dataset.originalText) {
+    button.dataset.originalText = button.textContent;
+  }
+
+  button.disabled = isLoading;
+
+  button.textContent = isLoading
+    ? loadingText
+    : button.dataset.originalText;
 }
 
-const registerForm = document.getElementById("register-form");
+function getMessageElement() {
+  let messageElement = document.getElementById("auth-message");
 
-registerForm?.addEventListener("submit", async (event) => {
+  if (!messageElement && form) {
+    messageElement = document.createElement("p");
+    messageElement.id = "auth-message";
+    messageElement.setAttribute("role", "alert");
+
+    messageElement.style.marginTop = "12px";
+    messageElement.style.fontSize = "13px";
+    messageElement.style.textAlign = "center";
+
+    form.appendChild(messageElement);
+  }
+
+  return messageElement;
+}
+
+function showMessage(message, isError = false) {
+  const messageElement = getMessageElement();
+
+  if (!messageElement) {
+    window.alert(message);
+    return;
+  }
+
+  messageElement.textContent = message;
+  messageElement.style.color = isError
+    ? "#b42318"
+    : "#067647";
+}
+
+function clearMessage() {
+  const messageElement = document.getElementById("auth-message");
+
+  if (messageElement) {
+    messageElement.textContent = "";
+  }
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function getSafeErrorMessage(error, defaultMessage) {
+  console.error("Supabase Auth Error:", error);
+
+  const message = error?.message?.toLowerCase() || "";
+
+  if (message.includes("invalid login credentials")) {
+    return "Email atau kata sandi salah.";
+  }
+
+  if (message.includes("email not confirmed")) {
+    return "Email belum dikonfirmasi. Periksa kotak masuk email.";
+  }
+
+  if (message.includes("user already registered")) {
+    return "Email tersebut sudah terdaftar.";
+  }
+
+  if (message.includes("password")) {
+    return "Kata sandi belum memenuhi persyaratan.";
+  }
+
+  if (message.includes("rate limit")) {
+    return "Terlalu banyak permintaan. Tunggu beberapa saat.";
+  }
+
+  return defaultMessage;
+}
+
+/*
+ * REGISTER
+ */
+async function handleRegister(event) {
   event.preventDefault();
+  clearMessage();
 
-  const name = getValue("register-name");
-  const email = getValue("register-email").toLowerCase();
-  const password = getValue("register-password");
-  const confirmation = getValue("register-password-confirmation");
-  const button = registerForm.querySelector("button[type='submit']");
+  const name = getTextValue("name");
+  const email = getTextValue("email").toLowerCase();
+  const password = getPasswordValue("password");
+  const confirmation = getPasswordValue("confirm-password");
 
-  button.dataset.defaultText ||= button.textContent;
+  if (!name || !email || !password || !confirmation) {
+    showMessage("Semua data wajib diisi.", true);
+    return;
+  }
 
-  if (!name || !email || !password) {
-    showMessage("Semua data wajib diisi", true);
+  if (!isValidEmail(email)) {
+    showMessage("Format email tidak valid.", true);
     return;
   }
 
   if (password.length < 8) {
-    showMessage("Password minimal 8 karakter", true);
+    showMessage("Kata sandi minimal 8 karakter.", true);
     return;
   }
 
   if (password !== confirmation) {
-    showMessage("Password salah", true);
+    showMessage("Konfirmasi kata sandi tidak sama.", true);
+    return;
+  }
+
+  const termsCheckbox = form.querySelector(
+    "input[type='checkbox']"
+  );
+
+  if (termsCheckbox && !termsCheckbox.checked) {
+    showMessage(
+      "Anda harus menyetujui syarat dan ketentuan.",
+      true
+    );
     return;
   }
 
   try {
-    setLoading(button, true);
+    setLoading(true, "Mendaftarkan...");
 
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+
       options: {
         data: {
           display_name: name
         },
-        emailRedirectTo: `${window.location.origin}/login.html`
+
+        emailRedirectTo:
+          `${window.location.origin}/login.html`
       }
     });
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
+    /*
+     * Jika Confirm Email dimatikan,
+     * session langsung tersedia.
+     */
     if (data.session) {
-      window.location.href = "index.html";
+      showMessage("Registrasi berhasil.");
+
+      window.setTimeout(() => {
+        window.location.href = "index.html";
+      }, 800);
+
       return;
     }
 
-    registerForm.reset();
-    showMessage("Registrasi berhasil. Periksa email untuk konfirmasi.");
+    /*
+     * Jika Confirm Email diaktifkan,
+     * pengguna harus membuka email dahulu.
+     */
+    form.reset();
+
+    showMessage(
+      "Registrasi berhasil. Periksa email untuk melakukan konfirmasi."
+    );
   } catch (error) {
-    showMessage(error.message || "Registrasi gagal.", true);
+    showMessage(
+      getSafeErrorMessage(error, "Registrasi gagal."),
+      true
+    );
   } finally {
-    setLoading(button, false);
+    setLoading(false);
   }
-});
+}
 
-const loginForm = document.getElementById("login-form");
-
-loginForm?.addEventListener("submit", async (event) => {
+/*
+ * LOGIN
+ */
+async function handleLogin(event) {
   event.preventDefault();
+  clearMessage();
 
-  const email = getValue("login-email").toLowerCase();
-  const password = getValue("login-password");
-  const button = loginForm.querySelector("button[type='submit']");
-
-  button.dataset.defaultText ||= button.textContent;
+  const email = getTextValue("email").toLowerCase();
+  const password = getPasswordValue("password");
 
   if (!email || !password) {
-    showMessage("Email dan password wajib diisi.", true);
+    showMessage(
+      "Email dan kata sandi wajib diisi.",
+      true
+    );
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    showMessage("Format email tidak valid.", true);
     return;
   }
 
   try {
-    setLoading(button, true);
+    setLoading(true, "Memasuki akun...");
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+    const { error } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
-    window.location.href = "index.html";
-  } catch {
-    showMessage("Email atau password salah.", true);
+    showMessage("Login berhasil.");
+
+    window.setTimeout(() => {
+      window.location.href = "index.html";
+    }, 600);
+  } catch (error) {
+    showMessage(
+      getSafeErrorMessage(
+        error,
+        "Login tidak berhasil."
+      ),
+      true
+    );
   } finally {
-    setLoading(button, false);
+    setLoading(false);
   }
-});
+}
 
-const forgotForm = document.getElementById("forgot-form");
-
-forgotForm?.addEventListener("submit", async (event) => {
+/*
+ * FORGOT PASSWORD
+ */
+async function handleForgotPassword(event) {
   event.preventDefault();
+  clearMessage();
 
-  const email = getValue("forgot-email").toLowerCase();
-  const button = forgotForm.querySelector("button[type='submit']");
-
-  button.dataset.defaultText ||= button.textContent;
+  const email = getTextValue("email").toLowerCase();
 
   if (!email) {
     showMessage("Masukkan email terlebih dahulu.", true);
     return;
   }
 
+  if (!isValidEmail(email)) {
+    showMessage("Format email tidak valid.", true);
+    return;
+  }
+
   try {
-    setLoading(button, true);
+    setLoading(true, "Mengirim tautan...");
 
-    const { error } = await supabase.auth.resetPasswordForEmail(
-      email,
-      {
-        redirectTo: `${window.location.origin}/update-password.html`
-      }
-    );
+    const { error } =
+      await supabase.auth.resetPasswordForEmail(
+        email,
+        {
+          redirectTo:
+            `${window.location.origin}/update-password.html`
+        }
+      );
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
-    forgotForm.reset();
+    form.reset();
 
+    /*
+     * Jangan memberitahukan apakah email terdaftar.
+     * Ini mencegah orang menebak akun pengguna.
+     */
     showMessage(
       "Jika email terdaftar, tautan pemulihan akan dikirim."
     );
-  } catch {
-    showMessage("Permintaan tidak dapat diproses.", true);
+  } catch (error) {
+    showMessage(
+      getSafeErrorMessage(
+        error,
+        "Permintaan reset kata sandi gagal."
+      ),
+      true
+    );
   } finally {
-    setLoading(button, false);
+    setLoading(false);
   }
-});
+}
 
-const updatePasswordForm =
-  document.getElementById("update-password-form");
-
-updatePasswordForm?.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const password = getValue("new-password");
-  const confirmation = getValue("new-password-confirmation");
-  const button =
-    updatePasswordForm.querySelector("button[type='submit']");
-
-  button.dataset.defaultText ||= button.textContent;
-
-  if (password.length < 8) {
-    showMessage("Password minimal 8 karakter.", true);
-    return;
-  }
-
-  if (password !== confirmation) {
-    showMessage("Konfirmasi password tidak sama.", true);
-    return;
-  }
+/*
+ * LOGOUT
+ * Dapat dipanggil oleh halaman lain menggunakan:
+ * logout()
+ */
+window.logout = async function logout(event) {
+  event?.preventDefault();
 
   try {
-    setLoading(button, true);
-
-    const { error } = await supabase.auth.updateUser({
-      password
-    });
-
-    if (error) throw error;
-
-    showMessage("Password berhasil diperbarui.");
-
-    setTimeout(() => {
-      window.location.href = "login.html";
-    }, 1200);
-  } catch (error) {
-    showMessage(error.message || "Password gagal diperbarui.", true);
-  } finally {
-    setLoading(button, false);
-  }
-});
-
-document
-  .getElementById("logout-button")
-  ?.addEventListener("click", async () => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      showMessage("Logout gagal.", true);
-      return;
+      throw error;
     }
 
     window.location.href = "login.html";
-  });
+  } catch (error) {
+    console.error("Logout gagal:", error);
+    window.alert("Logout gagal. Silakan coba kembali.");
+  }
+};
+
+/*
+ * Tombol lihat/sembunyikan password.
+ * Tetap kompatibel dengan HTML tim.
+ */
+window.togglePassword = function togglePassword(id, button) {
+  const input = document.getElementById(id);
+
+  if (!input) return;
+
+  input.type =
+    input.type === "password" ? "text" : "password";
+
+  const icon = button?.querySelector("i");
+
+  if (icon) {
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
+  }
+};
+
+/*
+ * Menentukan fungsi berdasarkan halaman.
+ */
+if (form) {
+  if (currentPage.includes("register")) {
+    form.addEventListener("submit", handleRegister);
+  } else if (currentPage.includes("forgot-password")) {
+    form.addEventListener(
+      "submit",
+      handleForgotPassword
+    );
+  } else if (currentPage.includes("login")) {
+    form.addEventListener("submit", handleLogin);
+  }
+}
