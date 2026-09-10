@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SafeMap | Ruang Aman</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
+
+  <link rel="stylesheet" href="css/safemap.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">♡</span>
+
+      <span>
+        <strong>Ruang Aman</strong>
+        <small>Lebih Aman, Lebih Berdaya</small>
+      </span>
+    </a>
+
+    <nav class="navigation">
+      <a href="index.html">Beranda</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="safemap.html" class="active">Safe Map</a>
+      <a href="reports.html">Laporan</a>
+    </nav>
+  </header>
+
+  <main class="safemap-container">
+    <section class="map-section">
+      <header class="map-heading">
+        <div>
+          <p class="eyebrow">LAYANAN BANTUAN</p>
+          <h1>Safe Map</h1>
+
+          <p>
+            Temukan lokasi bantuan yang aman dan dapat dihubungi.
+          </p>
+        </div>
+
+        <button id="locate-user" type="button">
+          ◎ Gunakan Lokasi Saya
+        </button>
+      </header>
+
+      <div class="map-wrapper">
+        <div class="map-controls">
+          <input
+            id="location-search"
+            type="search"
+            placeholder="Cari layanan atau alamat..."
+          >
+
+          <div id="category-buttons" class="category-buttons">
+            <button class="active" data-category="semua" type="button">
+              Semua
+            </button>
+
+            <button data-category="hukum" type="button">
+              Hukum
+            </button>
+
+            <button data-category="konseling" type="button">
+              Konseling
+            </button>
+
+            <button data-category="kesehatan" type="button">
+              Kesehatan
+            </button>
+
+            <button data-category="polisi" type="button">
+              Polisi
+            </button>
+          </div>
+        </div>
+
+        <div id="map" aria-label="Peta lokasi bantuan"></div>
+      </div>
+    </section>
+
+    <aside class="services-section">
+      <div class="services-heading">
+        <h2>Daftar Layanan Terdekat</h2>
+
+        <p>
+          <span id="service-count">0</span> layanan ditemukan
+        </p>
+      </div>
+
+      <div id="service-list" class="service-list"></div>
+    </aside>
+
+    <section class="report-incident">
+      <h2>Laporkan Kejadian</h2>
+
+      <p>
+        Anda juga bisa mengunggah laporan dan bukti terkait kejadian
+        yang Anda alami.
+      </p>
+
+      <a href="evidence.html">Unggah Laporan</a>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/safemap.js"></script>
+</body>
+</html>
