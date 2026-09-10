@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Tambah Bukti | Ruang Aman</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="css/evidence.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">♡</span>
+
+      <span>
+        <strong>Ruang Aman</strong>
+        <small>Lebih Aman, Lebih Berdaya</small>
+      </span>
+    </a>
+
+    <nav class="navigation">
+      <a href="index.html">Beranda</a>
+      <a href="evidence.html" class="active">Evidence</a>
+      <a href="safemap.html">Safe Map</a>
+      <a href="reports.html">Laporan</a>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <section class="page-heading">
+      <p class="eyebrow">PENGUMPULAN BUKTI</p>
+      <h1>Tambah Bukti</h1>
+
+      <p>
+        Unggah dan tuliskan informasi terkait kejadian yang Anda alami.
+      </p>
+    </section>
+
+    <form id="evidence-form" class="evidence-form" novalidate>
+      <div class="field full-width">
+        <label for="evidence-title">Judul bukti</label>
+
+        <input
+          id="evidence-title"
+          name="title"
+          type="text"
+          maxlength="100"
+          placeholder="Tulis judul bukti..."
+          required
+        >
+
+        <small class="error-message" id="title-error"></small>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="evidence-category">Kategori</label>
+
+          <select
+            id="evidence-category"
+            name="category"
+            required
+          >
+            <option value="">Pilih kategori</option>
+            <option value="pelecehan-online">Pelecehan online</option>
+            <option value="ancaman">Ancaman</option>
+            <option value="kekerasan-verbal">Kekerasan verbal</option>
+            <option value="kekerasan-fisik">Kekerasan fisik</option>
+            <option value="diskriminasi">Diskriminasi</option>
+            <option value="lainnya">Lainnya</option>
+          </select>
+
+          <small class="error-message" id="category-error"></small>
+        </div>
+
+        <div class="field">
+          <label for="incident-date">Tanggal kejadian</label>
+
+          <input
+            id="incident-date"
+            name="incidentDate"
+            type="date"
+            required
+          >
+
+          <small class="error-message" id="date-error"></small>
+        </div>
+      </div>
+
+      <div class="field full-width">
+        <label for="description">Keterangan</label>
+
+        <textarea
+          id="description"
+          name="description"
+          maxlength="1500"
+          rows="5"
+          placeholder="Tulis keterangan dan kronologi singkat..."
+          required
+        ></textarea>
+
+        <div class="field-footer">
+          <small class="error-message" id="description-error"></small>
+          <small><span id="character-count">0</span>/1500</small>
+        </div>
+      </div>
+
+      <div class="field full-width">
+        <label>Unggah bukti</label>
+
+        <label
+          for="evidence-file"
+          class="upload-area"
+          id="upload-area"
+        >
+          <input
+            id="evidence-file"
+            name="file"
+            type="file"
+            accept=".jpg,.jpeg,.png,.webp,.mp3,.wav,.m4a,.mp4,.mov,.webm,.pdf,.doc,.docx,.txt"
+            hidden
+          >
+
+          <span class="upload-icon">⇧</span>
+          <strong>Klik untuk mengunggah atau seret file ke sini</strong>
+
+          <small>
+            Format: foto, video, audio, dokumen PDF/DOC/TXT
+          </small>
+
+          <small>Maksimal 4 MB untuk pemrosesan langsung</small>
+        </label>
+
+        <small class="error-message" id="file-error"></small>
+
+        <div id="file-preview" class="file-preview hidden">
+          <span class="file-preview-icon" id="file-icon">📎</span>
+
+          <span class="file-information">
+            <strong id="file-name"></strong>
+            <small id="file-size"></small>
+          </span>
+
+          <button
+            id="remove-file"
+            type="button"
+            aria-label="Hapus file"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+
+      <div id="form-alert" class="form-alert hidden" role="alert"></div>
+
+      <button id="submit-button" class="submit-button" type="submit">
+        Simpan
+      </button>
+
+      <p class="privacy-message">
+        Bukti mentah digunakan untuk proses analisis awal dan tidak boleh
+        dibagikan tanpa izin pemilik.
+      </p>
+    </form>
+  </main>
+
+  <script src="js/evidence.js"></script>
+</body>
+</html>
