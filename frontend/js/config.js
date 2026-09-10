@@ -1,1 +1,5 @@
+export const SUPABASE_URL =
+  "https://smxivykhojqiyijohzdi.supabase.co";
 
+export const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNteGl2eWtob2pxaXlpam9oemRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1ODM0ODYsImV4cCI6MjEwNDE1OTQ4Nn0.mTlxdGP39YkWabekSgNcL2E4tJTvQQdujb1WL86FKdY";
