@@ -45,7 +45,11 @@ app.post("/process", upload.single("file"), async (req, res) => {
     const chronology = validateChronology(req.body.chronology);
     const file = validateFile(req.file);
     const evidence = readEvidenceFile(file);
-    const mlResult = await processWithML(evidence);
+    const mlResult = await processWithML(  // ubah const ml result
+    evidence,
+    chronology,
+    req.body.title || ""
+);
 
     res.json({
       success: true,
