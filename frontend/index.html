@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ruang Aman – Lebih Aman, Lebih Didengar, Lebih Berdaya</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- DECORATIVE LEAVES -->
+  <div class="leaf-bg leaf-bg-1"><i class="fas fa-leaf"></i></div>
+  <div class="leaf-bg leaf-bg-2"><i class="fas fa-leaf"></i></div>
+  <div class="leaf-bg leaf-bg-3"><i class="fas fa-leaf"></i></div>
+  <div class="leaf-bg leaf-bg-4"><i class="fas fa-leaf"></i></div>
+
+  <!-- NAVBAR GUEST -->
+  <nav class="navbar navbar-guest" id="navbar-guest">
+    <div class="brand">
+      <i class="fas fa-shield-alt"></i> Ruang Aman
+    </div>
+    <div class="nav-links">
+      <a href="/">Beranda</a>
+      <a href="#">Tentang</a>
+      <a href="#">SafeMap</a>
+      <a href="#">Bantuan</a>
+      <a href="/login.html" class="nav-login-btn">Masuk</a>
+      <a href="/register.html" class="nav-register-btn">Daftar</a>
+    </div>
+  </nav>
+
+  <!-- NAVBAR USER -->
+  <nav class="navbar navbar-user" id="navbar-user" style="display: none;">
+    <div class="brand">
+      <i class="fas fa-shield-alt"></i> Ruang Aman
+    </div>
+    <div class="nav-center">
+      <a href="/" class="nav-link active"><i class="fas fa-home"></i> Beranda</a>
+      <a href="#" class="nav-link">Tentang</a>
+      <a href="#" class="nav-link">SafeMap</a>
+      <a href="#" class="nav-link">Bantuan</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Cari informasi, layanan, atau fitur..." />
+      </div>
+      <button class="nav-icon-btn" title="Notifikasi">
+        <i class="fas fa-bell"></i>
+        <span class="notif-badge">3</span>
+      </button>
+      <div class="nav-user" onclick="toggleUserMenu(event)">
+        <img src="https://i.pravatar.cc/80?img=47" alt="User Avatar" class="nav-avatar" />
+        <span class="nav-username">Hai, User</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="user-dropdown" id="user-dropdown">
+          <a href="#"><i class="fas fa-user"></i> Profil Saya</a>
+          <a href="#"><i class="fas fa-cog"></i> Pengaturan</a>
+          <a href="#"><i class="fas fa-bookmark"></i> Tersimpan</a>
+          <hr>
+          <a href="#" onclick="logout(event)"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+    <div class="hero-content">
+      <div class="hero-tagline">
+        <i class="fas fa-lock"></i> KEAMANAN ANDA. PRIVASI ANDA.
+        <span class="leaf-small"><i class="fas fa-leaf"></i></span>
+      </div>
+      <h1>
+        Langkah Anda Menuju <br /><span>Ruang yang Lebih Aman.</span>
+      </h1>
+      <p class="hero-desc">
+        Platform untuk membantu Anda mengolah bukti digital, memahami situasi, dan menemukan langkah berikutnya.
+        <span class="leaf-small"><i class="fas fa-leaf"></i></span>
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-primary">
+          <i class="fas fa-arrow-right"></i> Proses Bukti
+        </a>
+        <a href="#" class="btn btn-outline">
+          <i class="fas fa-map-marked-alt"></i> SafeMap
+        </a>
+      </div>
+    </div>
+    <div class="hero-illustration">
+      <img src="https://thumbs.dreamstime.com/b/self-love-woman-hugs-her-reflection-mirror-acceptance-comfort-psychological-health-harmony-positive-emotions-motivation-cartoon-362476516.jpg" alt="Ilustrasi Wanita" loading="lazy" />
+      <div class="leaf-around leaf-around-1"><i class="fas fa-leaf"></i></div>
+      <div class="leaf-around leaf-around-2"><i class="fas fa-leaf"></i></div>
+      <div class="leaf-around leaf-around-3"><i class="fas fa-leaf"></i></div>
+      <div class="leaf-around leaf-around-4"><i class="fas fa-leaf"></i></div>
+      <div class="leaf-around leaf-around-5"><i class="fas fa-leaf"></i></div>
+      <div class="leaf-around leaf-around-6"><i class="fas fa-leaf"></i></div>
+    </div>
+  </div>
+
+  <!-- QUOTE -->
+  <div class="quote-section">
+    <div class="quote-icon">"</div>
+    <div class="quote-content">
+      <div class="quote">Kamu tidak sendirian. Kami ada untuk mendukung setiap langkahmu.</div>
+      <div class="quote-author">— Ruang Aman</div>
+    </div>
+  </div>
+
+  <!-- 4 LAYANAN -->
+  <div class="help-grid">
+    <a href="#" class="help-item">
+      <i class="fas fa-file-alt"></i>
+      <h4>Laporan Polisi</h4>
+      <p>Akses informasi dan kanal pelaporan resmi</p>
+    </a>
+    <a href="#" class="help-item">
+      <i class="fas fa-comments"></i>
+      <h4>Konseling</h4>
+      <p>Temukan layanan konseling dan dukungan</p>
+    </a>
+    <a href="#" class="help-item">
+      <i class="fas fa-balance-scale"></i>
+      <h4>Bantuan Hukum</h4>
+      <p>Informasi dan akses bantuan hukum</p>
+    </a>
+    <a href="#" class="help-item">
+      <i class="fas fa-phone-alt"></i>
+      <h4>Kontak Darurat</h4>
+      <p>Hubungi layanan darurat yang tersedia</p>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-bottom">
+    <div class="footer-links">
+      <a href="#">Tentang SafeMap</a>
+      <a href="#">Kebijakan Privasi</a>
+      <a href="#">Bantuan</a>
+    </div>
+    <div class="copyright">© 2025 Ruang Aman, Semua hak dilindungi.</div>
+  </div>
+
+</div>
+
+</body>
+</html>
