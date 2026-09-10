@@ -38,13 +38,43 @@ function readEvidenceFile(file) {
   };
 }
 
-async function processWithML(file) {
-  // Sementara: simulasi pemanggilan Machine Learning
-  return {
-    status: "success",
-    message: "File siap diproses oleh Machine Learning",
-    filename: file.originalname
-  };
+// final code pemanggilan ml
+async function processWithML(file, chronology, title = "") {
+  const mlUrl = process.env.ML_API_URL;
+  const mlApiKey = process.env.ML_API_KEY;
+
+  if (!mlUrl || !mlApiKey) {
+    throw new Error("Konfigurasi ML belum tersedia");
+  }
+
+  const formData = new FormData();
+
+  const fileBlob = new Blob(
+    [file.buffer],
+    { type: file.mimetype }
+  );
+
+  formData.append("file", fileBlob, file.originalname);
+  formData.append("chronology", chronology);
+  formData.append("title", title);
+
+  const response = await fetch(`${mlUrl}/process`, {
+    method: "POST",
+    headers: {
+      "x-ml-api-key": mlApiKey
+    },
+    body: formData
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      result.detail || "ML gagal memproses bukti"
+    );
+  }
+
+  return result;
 }
 
 module.exports = {
