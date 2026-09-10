@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Laporan | Ruang Aman</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="css/reports.css">
+</head>
+
+<body data-page="reports">
+  <header class="topbar">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">♡</span>
+
+      <span>
+        <strong>Ruang Aman</strong>
+        <small>Lebih Aman, Lebih Berdaya</small>
+      </span>
+    </a>
+
+    <nav class="navigation">
+      <a href="index.html">Beranda</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="safemap.html">Safe Map</a>
+      <a href="reports.html" class="active">Laporan</a>
+    </nav>
+  </header>
+
+  <main class="reports-container">
+    <header class="reports-heading">
+      <div>
+        <p class="eyebrow">RIWAYAT KASUS</p>
+        <h1>Laporan</h1>
+        <p>Lihat dan unduh ringkasan kasus Anda.</p>
+      </div>
+
+      <a href="evidence.html" class="new-report-button">
+        + Buat Laporan Baru
+      </a>
+    </header>
+
+    <section class="report-controls">
+      <div class="status-tabs" id="status-tabs">
+        <button type="button" class="active" data-status="Semua">
+          Semua Laporan
+        </button>
+
+        <button type="button" data-status="Menunggu Diproses">
+          Menunggu Diproses
+        </button>
+
+        <button type="button" data-status="Selesai">
+          Selesai
+        </button>
+      </div>
+
+      <div class="filter-row">
+        <label class="search-box">
+          <span>⌕</span>
+
+          <input
+            id="report-search"
+            type="search"
+            placeholder="Cari judul kasus..."
+          >
+        </label>
+
+        <select id="category-filter" aria-label="Filter kategori">
+          <option value="Semua">Semua kategori</option>
+          <option value="pelecehan-online">Pelecehan online</option>
+          <option value="ancaman">Ancaman</option>
+          <option value="kekerasan-verbal">Kekerasan verbal</option>
+          <option value="kekerasan-fisik">Kekerasan fisik</option>
+          <option value="diskriminasi">Diskriminasi</option>
+          <option value="lainnya">Lainnya</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="report-table-wrapper">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Judul Kasus</th>
+            <th>Tanggal Dibuat</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody id="report-list"></tbody>
+      </table>
+
+      <div id="empty-report" class="empty-report hidden">
+        <span>▤</span>
+        <h2>Belum ada laporan</h2>
+        <p>Mulai dengan mengunggah bukti pertama Anda.</p>
+
+        <a href="evidence.html">Tambah bukti</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/reports.js"></script>
+</body>
+</html>
