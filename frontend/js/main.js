@@ -1,5 +1,5 @@
-import './css/global.css';
-import './css/auth.css';
+import "../css/global.css";
+import "../css/auth.css";
 
 console.log('🚀 Ruang Aman - Vite dev server running!');
 
