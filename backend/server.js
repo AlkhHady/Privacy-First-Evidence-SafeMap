@@ -20,7 +20,7 @@ const upload = multer({
 app.use(express.json());
 
 // Endpoint untuk mengecek apakah server hidup
-app.get("/health", (req, res) => {
+app.get("/", (req, res) => {
   res.json({
     status: "ok",
     message: "Ruang Aman Backend is running"
