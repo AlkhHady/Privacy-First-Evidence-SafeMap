@@ -1,10 +1,12 @@
-"use strict";
+import { supabase } from "./supabase.js";
+import { createCase, saveEvidenceMetadata, deleteCase } from "./database.js";
+import { uploadEvidenceFiles, removeEvidenceFiles } from "./storage.js";
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = [
-  "jpg", "jpeg", "png", "webp", "mp3", "wav", "m4a",
-  "mp4", "mov", "webm", "pdf", "doc", "docx", "txt"
+  "jpg", "jpeg", "png", "webp", "mp3", "wav",
+  "mp4", "webm", "pdf", "txt"
 ];
 
 const form = document.getElementById("evidence-form");
@@ -176,9 +178,9 @@ function validateForm() {
   return valid;
 }
 
-function createTemporaryReport() {
+function createTemporaryReport(caseId, uploadedFiles) {
   const savedReports = JSON.parse(localStorage.getItem("ruangAmanReports") || "[]");
-  const reportId = `RA-${Date.now()}`;
+  const reportId = caseId;
   const evidence = selectedFiles.map(file => ({
     name: file.name,
     type: file.type,
@@ -193,7 +195,12 @@ function createTemporaryReport() {
     description: descriptionInput.value.trim(),
     fileName: selectedFiles[0].name,
     fileType: selectedFiles[0].type,
-    evidence,
+    evidence: uploadedFiles.map(file => ({
+      name: file.originalName,
+      type: file.mimeType,
+      size: file.sizeBytes,
+      storagePath: file.path
+    })),
     evidenceCount: evidence.length,
     createdAt: new Date().toISOString(),
     status: "Menunggu Diproses",
@@ -237,7 +244,7 @@ uploadArea.addEventListener("drop", function (event) {
   addFiles(event.dataTransfer.files);
 });
 
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
   if (!validateForm()) {
     showAlert("Periksa kembali data yang belum benar.", true);
@@ -245,17 +252,48 @@ form.addEventListener("submit", function (event) {
   }
 
   submitButton.disabled = true;
-  submitButton.textContent = "Menyimpan...";
+  submitButton.textContent = "Memeriksa akun...";
 
+  let createdCase = null;
+  let uploadedFiles = [];
   try {
-    const reportId = createTemporaryReport();
-    showAlert("Bukti berhasil disimpan.");
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      throw new Error("Silakan login terlebih dahulu sebelum mengunggah bukti.");
+    }
+
+    submitButton.textContent = "Membuat laporan...";
+    createdCase = await createCase({
+      userId: user.id,
+      title: titleInput.value.trim(),
+      chronology: descriptionInput.value.trim(),
+      incidentDate: dateInput.value
+    });
+
+    uploadedFiles = await uploadEvidenceFiles(
+      selectedFiles,
+      user.id,
+      createdCase.id,
+      function (current, total) {
+        submitButton.textContent = `Mengunggah ${current}/${total}...`;
+      }
+    );
+
+    submitButton.textContent = "Menyimpan data bukti...";
+    await saveEvidenceMetadata(createdCase.id, uploadedFiles);
+
+    const reportId = createTemporaryReport(createdCase.id, uploadedFiles);
+    showAlert(`${uploadedFiles.length} file berhasil diunggah dengan aman.`);
     window.setTimeout(function () {
       window.location.href = `report-detail.html?id=${encodeURIComponent(reportId)}`;
     }, 700);
   } catch (error) {
     console.error(error);
-    showAlert("Bukti belum berhasil disimpan. Silakan coba kembali.", true);
+    if (uploadedFiles.length) {
+      await removeEvidenceFiles(uploadedFiles.map(file => file.path));
+    }
+    if (createdCase) await deleteCase(createdCase.id);
+    showAlert(error.message || "Bukti belum berhasil diunggah.", true);
     submitButton.disabled = false;
     submitButton.textContent = "Simpan";
   }
