@@ -125,6 +125,7 @@
         >
           <input
             id="evidence-file"
+            class="evidence-file-input"
             name="files"
             type="file"
             accept=".jpg,.jpeg,.png,.webp,.mp3,.wav,.m4a,.mp4,.mov,.webm,.pdf,.doc,.docx,.txt"
@@ -141,6 +142,29 @@
 
           <small>Maksimal 10 file, masing-masing 25 MB</small>
         </label>
+
+        <div class="upload-type-grid" aria-label="Tambah bukti berdasarkan jenis">
+          <label class="upload-type-button">
+            <input class="evidence-file-input" type="file" accept=".jpg,.jpeg,.png,.webp" multiple hidden>
+            <span>🖼️</span><strong>Tambah Foto</strong>
+          </label>
+          <label class="upload-type-button">
+            <input class="evidence-file-input" type="file" accept=".mp4,.mov,.webm" multiple hidden>
+            <span>🎬</span><strong>Tambah Video</strong>
+          </label>
+          <label class="upload-type-button">
+            <input class="evidence-file-input" type="file" accept=".mp3,.wav,.m4a" multiple hidden>
+            <span>🎧</span><strong>Tambah Audio</strong>
+          </label>
+          <label class="upload-type-button">
+            <input class="evidence-file-input" type="file" accept=".pdf,.doc,.docx,.txt" multiple hidden>
+            <span>📄</span><strong>Tambah Dokumen</strong>
+          </label>
+        </div>
+
+        <p id="file-selection-status" class="file-selection-status" aria-live="polite">
+          Belum ada file yang dipilih.
+        </p>
 
         <small class="error-message" id="file-error"></small>
 
@@ -160,6 +184,6 @@
     </form>
   </main>
 
-  <script src="js/evidence.js"></script>
+  <script src="js/evidence.js?v=3"></script>
 </body>
 </html>
