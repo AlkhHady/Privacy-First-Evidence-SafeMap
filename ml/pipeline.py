@@ -210,13 +210,16 @@ def process_evidence(
         "combined_text": combined_text,
         "summary": summary_result["summary"],
         "key_points": summary_result["key_points"],
+        "risk_level": summary_result["risk_level"],
+        "detected_categories": summary_result["detected_categories"],
+        "confidence": summary_result["confidence"],
         "processed_file_count": len(processed_files),
         "failed_file_count": len(failed_files),
         "processed_files": processed_files,
         "failed_files": failed_files,
         "model_name": (
             "EasyOCR + faster-whisper-tiny + "
-            "extractive-frequency"
+            "evidence-aware-extractive-v2"
         ),
         "disclaimer": (
             "Hasil ini merupakan ringkasan awal dan bukan "
