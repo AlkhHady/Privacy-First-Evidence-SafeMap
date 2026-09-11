@@ -323,6 +323,70 @@ async function handleForgotPassword(event) {
   }
 }
 
+
+/*
+ * UPDATE PASSWORD
+ * Dipakai setelah pengguna membuka tautan pemulihan dari email.
+ */
+async function handleUpdatePassword(event) {
+  event.preventDefault();
+  clearMessage();
+
+  const password = getPasswordValue("password");
+  const confirmation = getPasswordValue("confirm-password");
+
+  if (!password || !confirmation) {
+    showMessage("Kata sandi baru dan konfirmasi wajib diisi.", true);
+    return;
+  }
+
+  if (password.length < 8) {
+    showMessage("Kata sandi minimal 8 karakter.", true);
+    return;
+  }
+
+  if (password !== confirmation) {
+    showMessage("Konfirmasi kata sandi tidak sama.", true);
+    return;
+  }
+
+  try {
+    setLoading(true, "Menyimpan...");
+
+    const { data: { session }, error: sessionError } =
+      await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      throw new Error(
+        "Tautan pemulihan tidak valid atau sudah kedaluwarsa. Minta tautan baru."
+      );
+    }
+
+    const { error } = await supabase.auth.updateUser({ password });
+
+    if (error) {
+      throw error;
+    }
+
+    form.reset();
+    showMessage("Kata sandi berhasil diperbarui. Anda akan diarahkan ke halaman masuk.");
+
+    await supabase.auth.signOut();
+
+    window.setTimeout(() => {
+      window.location.href = "/login.html";
+    }, 1200);
+  } catch (error) {
+    const recoveryError = error?.message?.includes("Tautan pemulihan")
+      ? error.message
+      : getSafeErrorMessage(error, "Kata sandi tidak dapat diperbarui.");
+
+    showMessage(recoveryError, true);
+  } finally {
+    setLoading(false);
+  }
+}
+
 /*
  * LOGOUT
  * Dapat dipanggil oleh halaman lain menggunakan:
@@ -376,6 +440,8 @@ if (form) {
       "submit",
       handleForgotPassword
     );
+  } else if (currentPage.includes("update-password")) {
+    form.addEventListener("submit", handleUpdatePassword);
   } else if (currentPage.includes("login")) {
     form.addEventListener("submit", handleLogin);
   }
