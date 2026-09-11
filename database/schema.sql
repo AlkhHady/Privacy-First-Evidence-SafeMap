@@ -36,6 +36,18 @@ create table public.cases (
 
     title varchar(120) not null,
 
+    category varchar(30) not null default 'lainnya'
+        check (
+            category in (
+                'pelecehan-online',
+                'ancaman',
+                'kekerasan-verbal',
+                'kekerasan-fisik',
+                'diskriminasi',
+                'lainnya'
+            )
+        ),
+
     chronology text not null default '',
 
     incident_date timestamptz,
