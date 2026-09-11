@@ -84,6 +84,13 @@ function getSafeErrorMessage(error, defaultMessage) {
 
   const message = error?.message?.toLowerCase() || "";
 
+  if (
+    message.includes("email signups are disabled") ||
+    error?.code === "email_provider_disabled"
+  ) {
+    return "Pendaftaran email belum diaktifkan pada Supabase.";
+  }
+
   if (message.includes("invalid login credentials")) {
     return "Email atau kata sandi salah.";
   }
