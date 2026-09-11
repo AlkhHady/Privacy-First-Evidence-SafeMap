@@ -6,7 +6,7 @@
   <title>Ruang Aman – Lebih Aman, Lebih Didengar, Lebih Berdaya</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script type="module" src="js/main.js?v=2"></script>
+  <script type="module" src="js/main.js?v=3"></script>
 </head>
 <body>
 
@@ -25,9 +25,7 @@
     </div>
     <div class="nav-links">
       <a href="/">Beranda</a>
-      <a href="#">Tentang</a>
       <a href="/safemap.html">SafeMap</a>
-      <a href="#">Bantuan</a>
       <a href="/login.html" class="nav-login-btn">Masuk</a>
       <a href="/register.html" class="nav-register-btn">Daftar</a>
     </div>
@@ -45,23 +43,11 @@
       <a href="reports.html" class="nav-link">Laporan</a>
     </div>
     <div class="nav-right">
-      <div class="nav-search">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Cari informasi, layanan, atau fitur..." />
-      </div>
-      <button class="nav-icon-btn" title="Notifikasi">
-        <i class="fas fa-bell"></i>
-        <span class="notif-badge">3</span>
-      </button>
       <div class="nav-user" onclick="toggleUserMenu(event)">
         <img src="https://i.pravatar.cc/80?img=47" alt="User Avatar" class="nav-avatar" />
         <span class="nav-username">Hai, User</span>
         <i class="fas fa-chevron-down nav-chevron"></i>
         <div class="user-dropdown" id="user-dropdown">
-          <a href="#"><i class="fas fa-user"></i> Profil Saya</a>
-          <a href="#"><i class="fas fa-cog"></i> Pengaturan</a>
-          <a href="#"><i class="fas fa-bookmark"></i> Tersimpan</a>
-          <hr>
           <a href="#" onclick="logout(event)"><i class="fas fa-sign-out-alt"></i> Keluar</a>
         </div>
       </div>
@@ -138,9 +124,7 @@
   <!-- FOOTER -->
   <div class="footer-bottom">
     <div class="footer-links">
-      <a href="#">Tentang SafeMap</a>
-      <a href="#">Kebijakan Privasi</a>
-      <a href="#">Bantuan</a>
+      <a href="/safemap.html">SafeMap</a>
     </div>
     <div class="copyright">© 2025 Ruang Aman, Semua hak dilindungi.</div>
   </div>
