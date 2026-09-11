@@ -47,6 +47,39 @@ function initializeMap() {
   markerLayer = L.layerGroup().addTo(map);
 }
 
+async function loadRiskZones() {
+  if (!map) return;
+
+  try {
+    const response = await fetch("http://localhost:3000/api/risk-zones");
+    const result = await response.json();
+
+    if (!result.success) {
+      console.error("Data zona merah gagal diambil");
+      return;
+    }
+
+    result.data.forEach(zone => {
+      L.circle([zone.latitude, zone.longitude], {
+        radius: zone.radius,
+        color: "#b91c1c",
+        fillColor: "#ef4444",
+        fillOpacity: 0.25,
+        weight: 2
+      })
+        .bindPopup(`
+          <strong>Zona Risiko Tinggi</strong><br>
+          Wilayah: ${zone.wilayah}<br>
+          Jumlah kasus: ${zone.jumlahKasus}
+        `)
+        .addTo(map);
+    });
+
+  } catch (error) {
+    console.error("Gagal mengambil data zona merah:", error);
+  }
+}
+
 function calculateDistance(firstPosition, service) {
   if (!firstPosition) return null;
   const earthRadius = 6371;
