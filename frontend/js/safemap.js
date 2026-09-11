@@ -51,7 +51,7 @@ async function loadRiskZones() {
   if (!map) return;
 
   try {
-    const response = await fetch("http://localhost:3000/api/risk-zones");
+    const response = await fetch("https://privacy-first-evidence-safe-map.vercel.app/api/risk-zones");
     const result = await response.json();
 
     if (!result.success) {
