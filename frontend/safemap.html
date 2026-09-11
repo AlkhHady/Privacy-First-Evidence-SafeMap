@@ -16,7 +16,7 @@
 
   <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
   >
 
   <link rel="stylesheet" href="css/safemap.css">
@@ -89,7 +89,14 @@
           </div>
         </div>
 
-        <div id="map" aria-label="Peta lokasi bantuan"></div>
+        <div id="map" aria-label="Peta lokasi bantuan">
+          <iframe
+            title="Peta layanan bantuan di Kota Padang"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=100.31%2C-0.99%2C100.41%2C-0.90&amp;layer=mapnik&amp;marker=-0.9471%2C100.36"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
       </div>
     </section>
 
@@ -117,7 +124,7 @@
     </section>
   </main>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/safemap.js"></script>
 </body>
 </html>

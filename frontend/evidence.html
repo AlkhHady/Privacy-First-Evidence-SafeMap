@@ -125,9 +125,10 @@
         >
           <input
             id="evidence-file"
-            name="file"
+            name="files"
             type="file"
             accept=".jpg,.jpeg,.png,.webp,.mp3,.wav,.m4a,.mp4,.mov,.webm,.pdf,.doc,.docx,.txt"
+            multiple
             hidden
           >
 
@@ -138,27 +139,12 @@
             Format: foto, video, audio, dokumen PDF/DOC/TXT
           </small>
 
-          <small>Maksimal 4 MB untuk pemrosesan langsung</small>
+          <small>Maksimal 10 file, masing-masing 25 MB</small>
         </label>
 
         <small class="error-message" id="file-error"></small>
 
-        <div id="file-preview" class="file-preview hidden">
-          <span class="file-preview-icon" id="file-icon">📎</span>
-
-          <span class="file-information">
-            <strong id="file-name"></strong>
-            <small id="file-size"></small>
-          </span>
-
-          <button
-            id="remove-file"
-            type="button"
-            aria-label="Hapus file"
-          >
-            ×
-          </button>
-        </div>
+        <div id="file-preview" class="file-preview-list hidden" aria-live="polite"></div>
       </div>
 
       <div id="form-alert" class="form-alert hidden" role="alert"></div>
