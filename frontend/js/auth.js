@@ -79,6 +79,21 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function getSafeLoginDestination() {
+  const next = new URLSearchParams(window.location.search).get("next");
+
+  if (
+    next &&
+    next.startsWith("/") &&
+    !next.startsWith("//") &&
+    !next.includes("\\")
+  ) {
+    return next;
+  }
+
+  return "/index.html";
+}
+
 function getSafeErrorMessage(error, defaultMessage) {
   console.error("Supabase Auth Error:", error);
 
@@ -250,8 +265,9 @@ async function handleLogin(event) {
 
     showMessage("Login berhasil.");
 
+    const destination = getSafeLoginDestination();
     window.setTimeout(() => {
-      window.location.href = "index.html";
+      window.location.href = destination;
     }, 600);
   } catch (error) {
     showMessage(
