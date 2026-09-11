@@ -12,13 +12,14 @@ const titleInput = document.getElementById("evidence-title");
 const categoryInput = document.getElementById("evidence-category");
 const dateInput = document.getElementById("incident-date");
 const descriptionInput = document.getElementById("description");
-const fileInput = document.getElementById("evidence-file");
+const fileInputs = document.querySelectorAll(".evidence-file-input");
 const uploadArea = document.getElementById("upload-area");
 const filePreview = document.getElementById("file-preview");
 const characterCount = document.getElementById("character-count");
 const submitButton = document.getElementById("submit-button");
 const formAlert = document.getElementById("form-alert");
 const fileErrorElement = document.getElementById("file-error");
+const fileSelectionStatus = document.getElementById("file-selection-status");
 
 let selectedFiles = [];
 
@@ -86,6 +87,8 @@ function renderFiles() {
   if (selectedFiles.length === 0) {
     filePreview.innerHTML = "";
     filePreview.classList.add("hidden");
+    fileSelectionStatus.textContent = "Belum ada file yang dipilih.";
+    fileSelectionStatus.classList.remove("has-files");
     return;
   }
 
@@ -103,6 +106,8 @@ function renderFiles() {
   }).join("");
 
   filePreview.classList.remove("hidden");
+  fileSelectionStatus.textContent = `${selectedFiles.length} file berhasil dipilih.`;
+  fileSelectionStatus.classList.add("has-files");
   filePreview.querySelectorAll("[data-remove-index]").forEach(function (button) {
     button.addEventListener("click", function () {
       selectedFiles.splice(Number(button.dataset.removeIndex), 1);
@@ -134,7 +139,7 @@ function addFiles(fileList) {
     errors.push(`Maksimal ${MAX_FILES} file dalam satu laporan.`);
   }
 
-  fileInput.value = "";
+  fileInputs.forEach(input => { input.value = ""; });
   fileErrorElement.textContent = errors.join(" ");
   renderFiles();
 }
@@ -208,8 +213,10 @@ descriptionInput.addEventListener("input", function () {
   characterCount.textContent = descriptionInput.value.length;
 });
 
-fileInput.addEventListener("change", function () {
-  addFiles(fileInput.files);
+fileInputs.forEach(function (input) {
+  input.addEventListener("change", function () {
+    addFiles(input.files);
+  });
 });
 
 ["dragenter", "dragover"].forEach(function (eventName) {
