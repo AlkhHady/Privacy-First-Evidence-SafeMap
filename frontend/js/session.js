@@ -1,0 +1,45 @@
+import { supabase } from "./supabase.js";
+
+function displayName(user) {
+  return user.user_metadata?.display_name?.trim() ||
+    user.email?.split("@")[0] ||
+    "Pengguna";
+}
+
+async function renderSessionControl() {
+  const navigation = document.querySelector(".navigation");
+  if (!navigation) return;
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    const loginLink = document.createElement("a");
+    loginLink.href = "login.html";
+    loginLink.textContent = "Masuk";
+    navigation.appendChild(loginLink);
+    return;
+  }
+
+  const userLabel = document.createElement("span");
+  userLabel.className = "session-user";
+  userLabel.textContent = `✓ ${displayName(user)}`;
+  userLabel.title = user.email || "";
+
+  const logoutButton = document.createElement("button");
+  logoutButton.className = "session-logout";
+  logoutButton.type = "button";
+  logoutButton.textContent = "Keluar";
+  logoutButton.addEventListener("click", async function () {
+    logoutButton.disabled = true;
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      logoutButton.disabled = false;
+      window.alert("Logout gagal. Silakan coba kembali.");
+      return;
+    }
+    window.location.href = "index.html";
+  });
+
+  navigation.append(userLabel, logoutButton);
+}
+
+renderSessionControl();
