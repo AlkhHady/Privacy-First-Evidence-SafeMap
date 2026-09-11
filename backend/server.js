@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const riskZones = require("./riskZones");
 const {
   validateChronology,
   validateFiles,
@@ -64,6 +65,13 @@ app.get("/", (req, res) => {
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok", message: "Ruang Aman Backend is running" });
+});
+
+app.get("/api/risk-zones", (req, res) => {
+  res.json({
+    success: true,
+    data: riskZones
+  });
 });
 
 function getBearerToken(req) {
