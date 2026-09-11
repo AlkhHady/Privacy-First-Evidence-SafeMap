@@ -187,4 +187,5 @@ locateButton.addEventListener("click", function () {
 });
 
 initializeMap();
+loadRiskZones();
 renderServices();
