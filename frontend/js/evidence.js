@@ -13,6 +13,9 @@ import {
   removeEvidenceFiles
 } from "./storage.js";
 import { processStoredEvidence } from "./api.js";
+import { requireAuthenticatedUser } from "./auth-guard.js";
+
+requireAuthenticatedUser();
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
@@ -334,15 +337,36 @@ form.addEventListener("submit", async function (event) {
   } catch (error) {
     console.error(error);
 
+    let deletedAfterFailure = false;
+
+    if (uploadedFiles.length) {
+      deletedAfterFailure = await removeEvidenceFiles(
+        uploadedFiles.map(file => file.path)
+      );
+    }
+
     if (!metadataSaved) {
-      if (uploadedFiles.length) {
-        await removeEvidenceFiles(uploadedFiles.map(file => file.path));
-      }
       if (createdCase) await deleteCase(createdCase.id);
     } else {
       await updateCaseStatus(createdCase.id, "failed").catch(console.error);
-      await updateEvidenceStatus(createdCase.id, "failed").catch(console.error);
-      saveTemporaryReport(createdCase.id, uploadedFiles, null, "Gagal", error.message);
+
+      if (deletedAfterFailure) {
+        await updateEvidenceStatus(
+          createdCase.id,
+          "deleted",
+          new Date().toISOString()
+        ).catch(console.error);
+      } else {
+        await updateEvidenceStatus(createdCase.id, "failed").catch(console.error);
+      }
+
+      saveTemporaryReport(
+        createdCase.id,
+        uploadedFiles,
+        null,
+        "Gagal",
+        error.message
+      );
     }
 
     showAlert(error.message || "Bukti belum berhasil diproses.", true);
