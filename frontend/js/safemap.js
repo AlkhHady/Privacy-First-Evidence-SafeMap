@@ -70,7 +70,8 @@ async function loadRiskZones() {
         .bindPopup(`
           <strong>Zona Risiko Tinggi</strong><br>
           Wilayah: ${zone.wilayah}<br>
-          Jumlah kasus: ${zone.jumlahKasus}
+          Jumlah kasus: ${zone.jumlahKasus}<br>
+          <small>Data demonstrasi, bukan statistik resmi.</small>
         `)
         .addTo(map);
     });

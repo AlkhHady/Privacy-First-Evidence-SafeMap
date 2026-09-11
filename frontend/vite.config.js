@@ -16,6 +16,7 @@ export default defineConfig({
         login: resolve(frontendRoot, "login.html"),
         register: resolve(frontendRoot, "register.html"),
         forgotPassword: resolve(frontendRoot, "forgot-password.html"),
+        updatePassword: resolve(frontendRoot, "update-password.html"),
         evidence: resolve(frontendRoot, "evidence.html"),
         reports: resolve(frontendRoot, "reports.html"),
         reportDetail: resolve(frontendRoot, "report-detail.html"),

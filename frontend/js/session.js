@@ -6,12 +6,22 @@ function displayName(user) {
     "Pengguna";
 }
 
+function setProtectedNavigationVisibility(navigation, isAuthenticated) {
+  navigation
+    .querySelectorAll('a[href="evidence.html"], a[href="reports.html"]')
+    .forEach(link => {
+      link.hidden = !isAuthenticated;
+    });
+}
+
 async function renderSessionControl() {
   const navigation = document.querySelector(".navigation");
   if (!navigation) return;
-  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
+  const { data: { user }, error } = await supabase.auth.getUser();
+  setProtectedNavigationVisibility(navigation, Boolean(user) && !error);
+
+  if (error || !user) {
     const loginLink = document.createElement("a");
     loginLink.href = "login.html";
     loginLink.textContent = "Masuk";
@@ -30,12 +40,14 @@ async function renderSessionControl() {
   logoutButton.textContent = "Keluar";
   logoutButton.addEventListener("click", async function () {
     logoutButton.disabled = true;
-    const { error } = await supabase.auth.signOut();
-    if (error) {
+    const { error: logoutError } = await supabase.auth.signOut({ scope: "local" });
+
+    if (logoutError) {
       logoutButton.disabled = false;
       window.alert("Logout gagal. Silakan coba kembali.");
       return;
     }
+
     window.location.href = "index.html";
   });
 
