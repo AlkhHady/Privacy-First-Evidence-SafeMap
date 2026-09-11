@@ -48,3 +48,7 @@ window.logout = async function logout(event) {
 };
 
 renderSession();
+
+supabase.auth.onAuthStateChange(() => {
+  renderSession();
+});
