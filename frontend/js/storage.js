@@ -15,9 +15,10 @@ function normalizedMimeType(file) {
   const types = {
     jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png",
     webp: "image/webp", mp3: "audio/mpeg", wav: "audio/wav",
-    mp4: "video/mp4",
+    m4a: "audio/mp4", ogg: "audio/ogg", flac: "audio/flac",
+    mp4: "video/mp4", mov: "video/quicktime",
     webm: file.type.startsWith("audio/") ? "audio/webm" : "video/webm",
-    pdf: "application/pdf", txt: "text/plain"
+    txt: "text/plain"
   };
   return types[extension] || file.type || "application/octet-stream";
 }
@@ -26,7 +27,6 @@ export function evidenceType(file) {
   if (file.type.startsWith("image/")) return "image";
   if (file.type.startsWith("audio/")) return "audio";
   if (file.type.startsWith("video/")) return "video";
-  if (file.name.toLowerCase().endsWith(".pdf")) return "pdf";
   return "text";
 }
 
@@ -53,8 +53,30 @@ export async function uploadEvidenceFiles(files, userId, caseId, onProgress) {
   }
 }
 
-export async function removeEvidenceFiles(paths) {
-  if (!paths.length) return;
+export async function createSignedEvidenceFiles(uploadedFiles, expiresIn = 600) {
+  const paths = uploadedFiles.map(file => file.path);
+  const { data, error } = await supabase.storage
+    .from(EVIDENCE_BUCKET)
+    .createSignedUrls(paths, expiresIn);
+
+  if (error) throw new Error(`Gagal menyiapkan bukti untuk analisis: ${error.message}`);
+
+  return uploadedFiles.map((file, index) => {
+    const signedFile = data[index];
+    if (!signedFile?.signedUrl || signedFile.error) {
+      throw new Error(`Gagal membuat akses sementara untuk ${file.originalName}`);
+    }
+    return { ...file, signedUrl: signedFile.signedUrl };
+  });
+}
+
+export async function removeEvidenceFiles(paths, throwOnError = false) {
+  if (!paths.length) return true;
   const { error } = await supabase.storage.from(EVIDENCE_BUCKET).remove(paths);
-  if (error) console.error("Gagal membersihkan file:", error.message);
+  if (error) {
+    console.error("Gagal membersihkan file:", error.message);
+    if (throwOnError) throw new Error(`Gagal menghapus bukti mentah: ${error.message}`);
+    return false;
+  }
+  return true;
 }

@@ -413,3 +413,71 @@ using (
 );
 
 commit;
+
+
+-- Integrasi frontend, backend, dan hasil ML.
+begin;
+
+alter table public.cases
+add column if not exists category varchar(30) not null default 'lainnya';
+
+do $$
+begin
+    alter table public.cases
+    add constraint cases_category_check
+    check (
+        category in (
+            'pelecehan-online',
+            'ancaman',
+            'kekerasan-verbal',
+            'kekerasan-fisik',
+            'diskriminasi',
+            'lainnya'
+        )
+    );
+exception
+    when duplicate_object then null;
+end
+$$;
+
+drop policy if exists "user dapat menambah hasil kasus sendiri"
+on public.analysis_results;
+
+create policy "user dapat menambah hasil kasus sendiri"
+on public.analysis_results
+for insert
+to authenticated
+with check (
+    exists (
+        select 1
+        from public.cases
+        where cases.id = analysis_results.case_id
+        and cases.user_id = (select auth.uid())
+    )
+);
+
+drop policy if exists "user dapat mengubah hasil kasus sendiri"
+on public.analysis_results;
+
+create policy "user dapat mengubah hasil kasus sendiri"
+on public.analysis_results
+for update
+to authenticated
+using (
+    exists (
+        select 1
+        from public.cases
+        where cases.id = analysis_results.case_id
+        and cases.user_id = (select auth.uid())
+    )
+)
+with check (
+    exists (
+        select 1
+        from public.cases
+        where cases.id = analysis_results.case_id
+        and cases.user_id = (select auth.uid())
+    )
+);
+
+commit;

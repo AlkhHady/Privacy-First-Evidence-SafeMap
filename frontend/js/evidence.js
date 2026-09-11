@@ -1,12 +1,24 @@
 import { supabase } from "./supabase.js";
-import { createCase, saveEvidenceMetadata, deleteCase } from "./database.js";
-import { uploadEvidenceFiles, removeEvidenceFiles } from "./storage.js";
+import {
+  createCase,
+  saveEvidenceMetadata,
+  saveAnalysisResult,
+  updateCaseStatus,
+  updateEvidenceStatus,
+  deleteCase
+} from "./database.js";
+import {
+  uploadEvidenceFiles,
+  createSignedEvidenceFiles,
+  removeEvidenceFiles
+} from "./storage.js";
+import { processStoredEvidence } from "./api.js";
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = [
-  "jpg", "jpeg", "png", "webp", "mp3", "wav",
-  "mp4", "webm", "pdf", "txt"
+  "jpg", "jpeg", "png", "webp",
+  "mp3", "wav", "mp4", "webm", "txt"
 ];
 
 const form = document.getElementById("evidence-form");
@@ -40,7 +52,6 @@ function getFileIcon(file) {
   if (file.type.startsWith("image/")) return "🖼️";
   if (file.type.startsWith("audio/")) return "🎧";
   if (file.type.startsWith("video/")) return "🎬";
-  if (file.type === "application/pdf") return "📄";
   return "📎";
 }
 
@@ -120,11 +131,10 @@ function renderFiles() {
 }
 
 function addFiles(fileList) {
-  const newFiles = Array.from(fileList);
   const errors = [];
   const existingKeys = new Set(selectedFiles.map(fileKey));
 
-  newFiles.forEach(function (file) {
+  Array.from(fileList).forEach(function (file) {
     const error = validateFile(file);
     if (error) {
       errors.push(error);
@@ -178,42 +188,38 @@ function validateForm() {
   return valid;
 }
 
-function createTemporaryReport(caseId, uploadedFiles) {
+function saveTemporaryReport(caseId, uploadedFiles, mlResult, status, errorMessage = "") {
   const savedReports = JSON.parse(localStorage.getItem("ruangAmanReports") || "[]");
-  const reportId = caseId;
-  const evidence = selectedFiles.map(file => ({
-    name: file.name,
-    type: file.type,
-    size: file.size
-  }));
-
+  const now = new Date().toISOString();
   const report = {
-    id: reportId,
+    id: caseId,
     title: titleInput.value.trim(),
     category: categoryInput.value,
     incidentDate: dateInput.value,
     description: descriptionInput.value.trim(),
-    fileName: selectedFiles[0].name,
-    fileType: selectedFiles[0].type,
+    fileName: uploadedFiles[0]?.originalName || "Tidak ada file",
     evidence: uploadedFiles.map(file => ({
       name: file.originalName,
       type: file.mimeType,
-      size: file.sizeBytes,
-      storagePath: file.path
+      size: file.sizeBytes
     })),
-    evidenceCount: evidence.length,
-    createdAt: new Date().toISOString(),
-    status: "Menunggu Diproses",
-    summary: "Bukti sudah diterima dan menunggu proses analisis.",
+    evidenceCount: uploadedFiles.length,
+    createdAt: now,
+    status,
+    summary: mlResult?.summary || errorMessage || "Ringkasan belum tersedia.",
+    analysis: Array.isArray(mlResult?.key_points) ? mlResult.key_points : [],
+    modelName: mlResult?.model_name || "",
     timeline: [
-      { date: new Date().toISOString(), label: "Laporan dibuat" },
-      { date: new Date().toISOString(), label: `${evidence.length} bukti berhasil ditambahkan` }
+      { date: now, label: "Laporan dibuat" },
+      { date: now, label: `${uploadedFiles.length} bukti berhasil ditambahkan` },
+      { date: now, label: status === "Selesai" ? "Analisis bukti selesai" : "Analisis bukti gagal" }
     ]
   };
 
-  savedReports.unshift(report);
-  localStorage.setItem("ruangAmanReports", JSON.stringify(savedReports));
-  return reportId;
+  const withoutSameReport = savedReports.filter(item => item.id !== caseId);
+  withoutSameReport.unshift(report);
+  localStorage.setItem("ruangAmanReports", JSON.stringify(withoutSameReport));
+  return caseId;
 }
 
 descriptionInput.addEventListener("input", function () {
@@ -256,6 +262,8 @@ form.addEventListener("submit", async function (event) {
 
   let createdCase = null;
   let uploadedFiles = [];
+  let metadataSaved = false;
+
   try {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
@@ -266,6 +274,7 @@ form.addEventListener("submit", async function (event) {
     createdCase = await createCase({
       userId: user.id,
       title: titleInput.value.trim(),
+      category: categoryInput.value,
       chronology: descriptionInput.value.trim(),
       incidentDate: dateInput.value
     });
@@ -274,27 +283,70 @@ form.addEventListener("submit", async function (event) {
       selectedFiles,
       user.id,
       createdCase.id,
-      function (current, total) {
+      (current, total) => {
         submitButton.textContent = `Mengunggah ${current}/${total}...`;
       }
     );
 
     submitButton.textContent = "Menyimpan data bukti...";
     await saveEvidenceMetadata(createdCase.id, uploadedFiles);
+    metadataSaved = true;
+    await updateCaseStatus(createdCase.id, "processing");
+    await updateEvidenceStatus(createdCase.id, "processing");
 
-    const reportId = createTemporaryReport(createdCase.id, uploadedFiles);
-    showAlert(`${uploadedFiles.length} file berhasil diunggah dengan aman.`);
+    submitButton.textContent = "Menyiapkan analisis aman...";
+    const signedFiles = await createSignedEvidenceFiles(uploadedFiles);
+
+    submitButton.textContent = "ML sedang mengolah bukti...";
+    const mlResult = await processStoredEvidence({
+      caseId: createdCase.id,
+      title: titleInput.value.trim(),
+      chronology: descriptionInput.value.trim(),
+      files: signedFiles
+    });
+
+    if (!mlResult?.success) {
+      throw new Error(mlResult?.error || "ML tidak menghasilkan analisis.");
+    }
+
+    submitButton.textContent = "Menyimpan hasil analisis...";
+    await saveAnalysisResult(createdCase.id, mlResult);
+    await updateCaseStatus(createdCase.id, "completed");
+    await updateEvidenceStatus(createdCase.id, "completed");
+
+    const reportId = saveTemporaryReport(
+      createdCase.id,
+      uploadedFiles,
+      mlResult,
+      "Selesai"
+    );
+
+    submitButton.textContent = "Membersihkan bukti mentah...";
+    const deleted = await removeEvidenceFiles(uploadedFiles.map(file => file.path));
+    if (deleted) {
+      await updateEvidenceStatus(createdCase.id, "deleted", new Date().toISOString());
+    }
+
+    showAlert(`${uploadedFiles.length} file berhasil diolah. Bukti mentah telah dibersihkan.`);
     window.setTimeout(function () {
       window.location.href = `report-detail.html?id=${encodeURIComponent(reportId)}`;
     }, 700);
   } catch (error) {
     console.error(error);
-    if (uploadedFiles.length) {
-      await removeEvidenceFiles(uploadedFiles.map(file => file.path));
+
+    if (!metadataSaved) {
+      if (uploadedFiles.length) {
+        await removeEvidenceFiles(uploadedFiles.map(file => file.path));
+      }
+      if (createdCase) await deleteCase(createdCase.id);
+    } else {
+      await updateCaseStatus(createdCase.id, "failed").catch(console.error);
+      await updateEvidenceStatus(createdCase.id, "failed").catch(console.error);
+      saveTemporaryReport(createdCase.id, uploadedFiles, null, "Gagal", error.message);
     }
-    if (createdCase) await deleteCase(createdCase.id);
-    showAlert(error.message || "Bukti belum berhasil diunggah.", true);
+
+    showAlert(error.message || "Bukti belum berhasil diproses.", true);
     submitButton.disabled = false;
-    submitButton.textContent = "Simpan";
+    submitButton.textContent = "Coba Lagi";
   }
 });
