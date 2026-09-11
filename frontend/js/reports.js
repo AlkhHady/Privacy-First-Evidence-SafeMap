@@ -1,4 +1,5 @@
 import { getReports } from "./database.js";
+import { requireAuthenticatedUser } from "./auth-guard.js";
 
 function escapeHTML(value = "") {
   const element = document.createElement("div");
@@ -181,6 +182,13 @@ async function renderReportDetailPage() {
   document.getElementById("print-report").addEventListener("click", () => window.print());
 }
 
-const currentPage = document.body.dataset.page;
-if (currentPage === "reports") renderReportsPage();
-if (currentPage === "report-detail") renderReportDetailPage();
+async function initializeProtectedReportPage() {
+  const user = await requireAuthenticatedUser();
+  if (!user) return;
+
+  const currentPage = document.body.dataset.page;
+  if (currentPage === "reports") await renderReportsPage();
+  if (currentPage === "report-detail") await renderReportDetailPage();
+}
+
+initializeProtectedReportPage();
